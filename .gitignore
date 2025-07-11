@@ -1,0 +1,50 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Translations
+*.mo
+*.pot
+
+# Django stuff:
+*.log
+*.log.*
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
+*.sqlite3
+*/migrations/0*
+
+# pyenv
+.python-version
+
+# Celery stuff
+celerybeat-schedule
+celerybeat.pid
+
+# Environments
+.env
+env
+venv
+.venv
+venv2
+
+.idea
+.vs-code
+
+static/webphone_old
+
+staticfiles/*
+media/*
+
+.vscode
+*.csv
+*.rdb
+
+.gitlab-ci.yml
+docker-compose.yml
+apache/certs/*
+Pipfile
+*.pem
+
