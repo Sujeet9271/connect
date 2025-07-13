@@ -52,7 +52,7 @@ class Users(AbstractBaseUser, PermissionsMixin):
     is_superuser    = models.BooleanField(verbose_name='Superuser', default=False)
     date_joined     = models.DateField(verbose_name='date joined', auto_now_add=True, auto_now=False)
     profile_pic     = models.ImageField(verbose_name='Profile Image',default='profile/default_user.png', upload_to=location)
-
+    user_id         = models.CharField(max_length=20, unique=True, blank=True, null=True)
     connections     = models.ManyToManyField('self',symmetrical=True, blank=True)
 
     USERNAME_FIELD = 'email'

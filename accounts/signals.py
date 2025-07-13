@@ -16,6 +16,28 @@ from notifications.tasks import send_connection_notification
 
 from core.logger import logger
 
+
+
+def generate_unique_user_id():
+    prefix = 'USR'
+    last_user = Users.objects.order_by('-id').first()
+    if last_user and last_user.user_id:
+        try:
+            last_num = int(last_user.user_id.replace(prefix, ''))
+        except ValueError:
+            last_num = 0
+    else:
+        last_num = 0
+    return f"{prefix}{last_num + 1:05d}"
+
+@receiver(pre_save, sender=Users)
+def pre_save_users(sender, instance:Users, *args, **kwargs):
+    logger.info('pre_save_user')
+    if not instance.user_id:
+        instance.user_id = generate_unique_user_id()
+
+
+
 @receiver(post_save,sender=Users)
 def post_save_user(sender, instance:Users, created:bool, *args, **kwargs):
     logger.info('post_save_user')

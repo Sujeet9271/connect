@@ -15,18 +15,22 @@ class UserProfileSerializer(serializers.ModelSerializer):
 
 class UserDetailSerializer(serializers.ModelSerializer):
     profile = UserProfileSerializer(read_only=True)
-    is_connected = serializers.BooleanField()
+    is_connected = serializers.SerializerMethodField()
 
     class Meta:
         model = Users
-        fields = ['id', 'email', 'username', 'name', 'profile_pic', 'is_connected', 'profile']
+        fields = ['id', 'user_id', 'email', 'username', 'name', 'profile_pic', 'is_connected', 'profile']
+
+
+    def get_is_connected(self, obj):
+        return getattr(obj, 'is_connected', False)
 
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = Users
         fields = [
-            'id', 'username', 'email', 'name', 'profile_pic'
+            'id', 'user_id', 'username', 'email', 'name', 'profile_pic'
         ]
 
 class UserListSerializer(serializers.ModelSerializer):
@@ -35,7 +39,7 @@ class UserListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Users
         fields = [
-            'id', 'username', 'email', 'name', 'is_connected', 'profile_pic'
+            'id', 'user_id', 'username', 'email', 'name', 'is_connected', 'profile_pic'
         ]
 
 
