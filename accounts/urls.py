@@ -10,10 +10,13 @@ accounts_router.register(r'connections', views.ConnectionRequestViewSet, basenam
 
 
 urlpatterns = [
+    path('', include(accounts_router.urls)),
     path('signup/', views.register_view, name='signup'),
     path('token/access/', views.token_obtain_pair_view, name='access_token'),
     path('token/refresh/', views.token_refresh,name="token_refresh"),
     path('token/verify/', views.token_verify,name="token_verify"),
     path('profile/', views.user_profile, name='user_profile'),
     path('confirm/<uidb64>/<token>/', views.activate_user, name='activate_user'),
+    path('connections/<int:id>/remove/', views.remove_connection, name='remove_connection'),
+
 ]

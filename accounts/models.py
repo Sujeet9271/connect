@@ -51,8 +51,9 @@ class Users(AbstractBaseUser, PermissionsMixin):
     is_staff        = models.BooleanField(verbose_name='Staff', default=False)
     is_superuser    = models.BooleanField(verbose_name='Superuser', default=False)
     date_joined     = models.DateField(verbose_name='date joined', auto_now_add=True, auto_now=False)
+    profile_pic     = models.ImageField(verbose_name='Profile Image',default='profile/default_user.png', upload_to=location)
 
-    connections = models.ManyToManyField('self',symmetrical=True)
+    connections     = models.ManyToManyField('self',symmetrical=True, blank=True)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username', 'name',]
@@ -74,7 +75,6 @@ class Users(AbstractBaseUser, PermissionsMixin):
 
 class UserDetail(models.Model):
     user = models.OneToOneField(Users, on_delete=models.CASCADE, related_name='profile',primary_key=True)
-    profile_pic = models.ImageField(verbose_name='Profile Image',default='profile/default_user.png', upload_to=location)
     contact_number = models.CharField(max_length=20)
     company_name = models.CharField(max_length=255)
     address = models.CharField(max_length=255)
@@ -93,7 +93,7 @@ class UserDetail(models.Model):
 class ConnectionRequest(models.Model):
     from_user = models.ForeignKey(Users, related_name='sent_requests', on_delete=models.CASCADE)
     to_user = models.ForeignKey(Users, related_name='received_requests', on_delete=models.CASCADE)
-    status = models.CharField(max_length=10, choices=[('pending', 'Pending'), ('accepted', 'Accepted')], default='pending')
+    status = models.CharField(max_length=10, choices=[('pending', 'Pending'), ('accepted', 'Accepted'), ('rejected','Rejected')], default='pending')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -103,5 +103,5 @@ class ConnectionRequest(models.Model):
     class Meta:
         verbose_name = "Connection Request"
         verbose_name_plural = "Connection Requests"
-        unique_together = ('from_user', 'to_user')
+        # unique_together = ('from_user', 'to_user')
         ordering = ['-updated_at', 'status']

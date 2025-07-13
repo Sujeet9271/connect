@@ -155,10 +155,10 @@ class ConnectionRequestViewSet(ModelViewSet):
         view_type = self.request.query_params.get('type')
         user = self.request.user
         if view_type == 'sent':
-            return self.request.user.sent_requests.filter(status='pending')
+            return user.sent_requests.filter(status='pending')
         elif view_type == 'received':
-            return self.request.user.received_requests.filter(status='pending')
-        return self.request.user.connections.all()
+            return user.received_requests.filter(status='pending')
+        return user.connections.all()
 
     def list(self, request, *args, **kwargs):
         view_type = self.request.query_params.get('type')
@@ -184,14 +184,10 @@ class ConnectionRequestViewSet(ModelViewSet):
 
 
     def update(self, request, *args, **kwargs):
-        # accept pending connection request
-        update_data = {
-            'status':'accepted',
-        }
         instance:ConnectionRequest = ConnectionRequest.objects.filter(id=kwargs.get(self.lookup_field), to_user=request.user, status='pending').first()
         if not instance:
             return Response({"detail":"Connection Request not found"}, status=status.HTTP_404_NOT_FOUND)
-        serializer = ConnectionRequestReceived(data=update_data, instance=instance, partial=True)
+        serializer = ConnectionRequestReceived(data=request.data, instance=instance, partial=True)
         serializer.is_valid(raise_exception=True)
         self.perform_update(serializer)
         return Response(serializer.data,status=status.HTTP_200_OK)
@@ -200,14 +196,11 @@ class ConnectionRequestViewSet(ModelViewSet):
 
     def partial_update(self, request, *args, **kwargs):
         # accept pending connection request
-        update_data = {
-            'status':'accepted'
-        }
         serializer = self.serializer_class
         instance:ConnectionRequest = ConnectionRequest.objects.filter(id=kwargs.get(self.lookup_field), to_user=request.user, status='pending').first()
         if not instance:
             return Response({"detail":"Connection Request not found"}, status=status.HTTP_404_NOT_FOUND)
-        serializer = ConnectionRequestReceived(data=update_data, instance=instance, partial=True)
+        serializer = ConnectionRequestReceived(data=request.data, instance=instance, partial=True)
         serializer.is_valid(raise_exception=True)
         self.perform_update(serializer)
         return Response(serializer.data,status=status.HTTP_200_OK)
@@ -216,36 +209,24 @@ class ConnectionRequestViewSet(ModelViewSet):
 
     def destroy(self, request, *args, **kwargs):
         # delete connection 
-        instance:ConnectionRequest = self.get_object()
-        if instance.from_user != request.user and instance.to_user != request.user:
-            return Response({"detail": "You've no permission for this action"}, status=status.HTTP_403_FORBIDDEN)
-        instance.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
-    
+        try:
+            instance:ConnectionRequest = ConnectionRequest.objects.filter(id=kwargs[self.lookup_field], from_user=request.user).exclude(status='accepted').latest('id')
+            instance.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        except ConnectionRequest.DoesNotExist:
+            return Response({"detail":"Connection Request was not found"}, status=status.HTTP_404_NOT_FOUND)    
 
     
 
 
-class ConnectionActions(APIView):
+class ConnectionRemove(APIView):
     permission_classes = [IsAuthenticated]
 
     def delete(self, request, id):
         # to delete user's pending connection
-        filters = Q(id=id)
-        filters.add(Q(Q(from_user=request.user)|Q(to_user=request.user)),Q.AND)
-        connection = ConnectionRequest.objects.filter(filters).exclude(status='accepted').first()
-        if connection:
-            connection.delete()
-            return Response(status=status.HTTP_204_NO_CONTENT)
-        return Response(status=status.HTTP_404_NOT_FOUND)
-    
+        ConnectionRequest.objects.filter(Q(from_user=request.user, to_user_id=id)|Q(to_user=request.user, from_user_id=id)).last().delete()
+        request.user.connections.remove(id)
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
-    def post(self, request, id):
-        # to accept/reject user's pending connection request
-        connection = ConnectionRequest.objects.filter(to_user=request.user,status='pending', id=id).first()
-        if connection:
-            connection.delete()
-            return Response(status=status.HTTP_204_NO_CONTENT)
-        return Response(status=status.HTTP_404_NOT_FOUND)
 
-connection_actions = ConnectionActions.as_view()
+remove_connection = ConnectionRemove.as_view()

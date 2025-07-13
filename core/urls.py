@@ -20,6 +20,6 @@ from accounts.urls import accounts_router
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('auth/', include('accounts.urls', namespace='accounts')),
-    path('accounts/', include(accounts_router.urls)),
+    path('auth/', include('auth.urls', namespace='auth')),
+    path('accounts/', include('accounts.urls', namespace='accounts')),
 ]

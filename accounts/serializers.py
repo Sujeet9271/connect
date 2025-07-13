@@ -10,7 +10,7 @@ from core.logger import logger
 class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserDetail
-        fields = ['contact_number', 'company_name', 'address', 'industry', 'profile_pic']
+        fields = ['contact_number', 'company_name', 'address', 'industry',]
 
 
 class UserDetailSerializer(serializers.ModelSerializer):
@@ -18,22 +18,22 @@ class UserDetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Users
-        fields = ['id', 'email', 'username', 'name', 'profile']
+        fields = ['id', 'email', 'username', 'name', 'profile_pic', 'profile']
 
-    def to_representation(self, instance):
-        data = super().to_representation(instance)
-        logger.debug(f'{data=}')
-        profile_detail = data.pop('profile',{})
-        logger.debug(f'{profile_detail=}')
-        if profile_detail:
-            data.update(profile_detail)
-        return data
+    # def to_representation(self, instance):
+    #     data = super().to_representation(instance)
+    #     logger.debug(f'{data=}')
+    #     profile_detail = data.pop('profile',{})
+    #     logger.debug(f'{profile_detail=}')
+    #     if profile_detail:
+    #         data.update(profile_detail)
+    #     return data
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = Users
         fields = [
-            'id', 'username', 'email', 'name',
+            'id', 'username', 'email', 'name', 'profile_pic'
         ]
 
 class UserListSerializer(serializers.ModelSerializer):
@@ -42,7 +42,7 @@ class UserListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Users
         fields = [
-            'id', 'username', 'email', 'name', 'is_connected',
+            'id', 'username', 'email', 'name', 'is_connected', 'profile_pic'
         ]
 
 
@@ -78,6 +78,12 @@ class ConnectionRequestSerializer(serializers.ModelSerializer):
 class ConnectionRequestReceived(serializers.ModelSerializer):
     from_user = UserSerializer(read_only=True)
 
+
+    def validate_status(self, status):
+        if status=='pending':
+            raise serializers.ValidationError("The status value should be either 'accepted' or 'rejected' ")
+        return status
+    
     class Meta:
         model = ConnectionRequest
         fields = ['id', 'from_user', 'status', 'created_at', 'updated_at']
@@ -106,11 +112,19 @@ class SendConnectionRequestSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("Cannot send request to yourself.")
 
         # check for existing request or connection between the sender and receiver
-        if ConnectionRequest.objects.filter(
-            Q(from_user=from_user, to_user=to_user) |
-            Q(from_user=to_user, to_user=from_user)
-        ).exists():
-            raise serializers.ValidationError("A connection request already exists or you are already connected.")
+        # if ConnectionRequest.objects.filter(
+        #     Q(from_user=from_user, to_user=to_user) |
+        #     Q(from_user=to_user, to_user=from_user)
+        # ).exclude(status='rejected').exists():
+        #     raise serializers.ValidationError("A connection request already exists or you are already connected.")
+
+        existing_request = ConnectionRequest.objects.filter(
+                                    Q(from_user=from_user, to_user=to_user) | Q(from_user=to_user, to_user=from_user),
+                                    status__in=['pending', 'accepted']
+                                ).exists()
+
+        if existing_request:
+            raise serializers.ValidationError("A connection already exists or is pending between these users.")
         return to_user
 
     def create(self, validated_data):
