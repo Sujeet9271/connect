@@ -1,0 +1,611 @@
+{
+	"info": {
+		"_postman_id": "c3d10bc1-63b4-48e4-b023-61167f7b056e",
+		"name": "Connection Managemnt",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "15093401",
+		"_collection_link": "https://universal-meadow-814474.postman.co/workspace/9ae3c95b-04ab-4d46-8244-ac4295a203bc/collection/15093401-c3d10bc1-63b4-48e4-b023-61167f7b056e?action=share&source=collection_link&creator=15093401"
+	},
+	"item": [
+		{
+			"name": "Accounts",
+			"item": [
+				{
+					"name": "Sign Up",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"sujeet@gmail.com\",\r\n    \"username\": \"sujeetk9\",\r\n    \"password\": \"adM!N@8848@\",\r\n    \"name\":\"Sujeet Kumar Gupta\",\r\n    \"contact_number\": 9800000000,\r\n    \"company_name\": \"EkGhanti\",\r\n    \"address\": \"Kathmandu\",\r\n    \"industry\": \"IT\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/accounts/signup/",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"accounts",
+								"signup",
+								""
+							]
+						},
+						"description": "## Sign Up Endpoint\n\nThis endpoint allows users to create a new account by providing their personal and company information. It is essential for onboarding new users into the system.\n\n### Request\n\n**Method:** POST  \n**URL:** `{{baseurl}}/accounts/signup/`\n\n#### Request Body\n\nThe request body must be in JSON format and contain the following parameters:\n\n- **email** (string): The email address of the user. This will be used for account verification and communication.\n    \n- **username** (string): A unique identifier for the user. This will be displayed publicly.\n    \n- **password** (string): The password for the account. It should meet security requirements.\n    \n- **name** (string): The full name of the user.\n    \n- **contact_number** (string): The user's contact number for communication purposes.\n    \n- **company_name** (string): The name of the company the user is associated with.\n    \n- **address** (string): The physical address of the user or company.\n    \n- **industry** (string): The industry in which the user's company operates.\n    \n\n#### Example Request Body\n\n``` json\n{\n  \"email\": \"example@example.com\",\n  \"username\": \"exampleUser\",\n  \"password\": \"securePassword123\",\n  \"name\": \"John Doe\",\n  \"contact_number\": \"1234567890\",\n  \"company_name\": \"Example Corp\",\n  \"address\": \"123 Example St, Example City\",\n  \"industry\": \"Technology\"\n}\n\n ```\n\n### Response\n\nUpon successful account creation, the API will return a response containing the following structure:\n\n- **status** (string): Indicates the success or failure of the request.\n    \n- **message** (string): A descriptive message regarding the outcome of the signup process.\n    \n- **data** (object): Contains additional information about the created account, such as user ID or any other relevant details.\n    \n\n### Example Response\n\n``` json\n{\n    \"user_id\": 7,\n    \"email\": \"sujeet.gupta9271@gmail.com\"\n}\n\n ```\n\n### Notes\n\n- Ensure that all required fields are provided in the request body.\n    \n- The email must be unique and valid for successful account creation.\n    \n- Passwords should adhere to security best practices to ensure account safety."
+					},
+					"response": []
+				},
+				{
+					"name": "User Profile",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseurl}}/accounts/profile/",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"accounts",
+								"profile",
+								""
+							]
+						},
+						"description": "# Get User Profile\n\nThis endpoint retrieves the profile information of the authenticated user. It provides essential details such as user identification, contact information, and profile settings.\n\n## Request\n\n- **Method:** GET\n    \n- **Endpoint:** `{{baseurl}}/accounts/profile/`\n    \n\n### Expected Input Parameters\n\nThis endpoint does not require any input parameters in the request. It assumes that the user is authenticated and the necessary credentials are provided through headers or session.\n\n## Response\n\nUpon a successful request, the server responds with a JSON object containing the user's profile information. The structure of the response is as follows:\n\n- **id**: (integer) The unique identifier for the user.\n    \n- **user_id**: (string) The unique user ID associated with the account.\n    \n- **email**: (string) The email address of the user.\n    \n- **username**: (string) The username of the user.\n    \n- **name**: (string) The full name of the user.\n    \n- **profile_pic**: (string) URL of the user's profile picture.\n    \n- **is_connected**: (boolean) Indicates whether the user is currently connected.\n    \n- **profile**: (object) Contains additional profile details:\n    \n    - **contact_number**: (string) The user's contact number.\n        \n    - **company_name**: (string) The name of the user's company.\n        \n    - **address**: (string) The user's address.\n        \n    - **industry**: (string) The industry in which the user operates.\n        \n\n### Example Response\n\n``` json\n{\n  \"id\": 0,\n  \"user_id\": \"\",\n  \"email\": \"\",\n  \"username\": \"\",\n  \"name\": \"\",\n  \"profile_pic\": \"\",\n  \"is_connected\": true,\n  \"profile\": {\n    \"contact_number\": \"\",\n    \"company_name\": \"\",\n    \"address\": \"\",\n    \"industry\": \"\"\n  }\n}\n\n ```\n\nThis endpoint is crucial for applications that require user profile management and display, allowing for a personalized experience based on user data."
+					},
+					"response": []
+				},
+				{
+					"name": "Edit User Profile",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "profile_pic",
+									"type": "file",
+									"src": "/D:/Pic/Profile/Screenshot 2023-04-23 144102.png"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseurl}}/accounts/profile/",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"accounts",
+								"profile",
+								""
+							]
+						},
+						"description": "### Update User Profile\n\nThis endpoint allows you to update the user profile information. The request utilizes the HTTP PATCH method to modify existing profile details.\n\n#### Request Parameters\n\nThe request body should be sent as form-data and can include the following parameters from the user profile:\n\n- **name** (text): The name of the user. This parameter is used to update the user's display name in their profile.\n    \n\nYou can include any combination of the following parameters in the request body to update the user's profile:\n\n- **contact_number**: The user's contact number.\n    \n- **company_name**: The name of the company the user is associated with.\n    \n- **address**: The user's address.\n    \n- **industry**: The industry in which the user operates.\n    \n\n#### Response\n\nUpon a successful update, the server responds with a status code of `200` and returns a JSON object containing the updated profile information. The response includes:\n\n- **id**: The unique identifier for the profile.\n    \n- **user_id**: The identifier for the user associated with the profile.\n    \n- **email**: The email address of the user.\n    \n- **username**: The username of the user.\n    \n- **name**: The updated name of the user.\n    \n- **profile_pic**: The URL of the user's profile picture.\n    \n- **is_connected**: A boolean indicating if the user is connected.\n    \n- **profile**: An object containing additional profile details such as contact number, company name, address, and industry.\n    \n\nMake sure to include only the parameters you wish to update in the request body. Unspecified parameters will remain unchanged.\n\nThis endpoint allows users to update their profile information. Specifically, it is used to modify the user's name associated with their account.\n\n#### Request Parameters\n\nThe request body must be sent as form-data and includes the following parameter:\n\n- **name** (text): This parameter represents the new name that the user wants to set for their profile.\n    \n\n#### Response Structure\n\nUpon a successful request, the server responds with a status code of 200 and a JSON object containing the following fields:\n\n- **id**: The unique identifier for the profile.\n    \n- **user_id**: The ID associated with the user.\n    \n- **email**: The email address of the user.\n    \n- **username**: The username of the user.\n    \n- **name**: The updated name of the user.\n    \n- **profile_pic**: The URL of the user's profile picture.\n    \n- **is_connected**: A boolean indicating if the user's profile is connected to other services.\n    \n- **profile**: An object containing additional profile details:\n    \n    - **contact_number**: The user's contact number.\n        \n    - **company_name**: The name of the company associated with the user.\n        \n    - **address**: The user's address.\n        \n    - **industry**: The industry in which the user operates.\n        \n\nThis endpoint is essential for maintaining up-to-date user information and ensuring that the profile reflects the latest changes made by the user."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Log In",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Parse the response body JSON\r",
+									"var responseBody = pm.response\r",
+									"if(responseBody){\r",
+									"    // Extract the value you need\r",
+									"    var extractedValue = responseBody.json();\r",
+									"\r",
+									"    // Update the variable\r",
+									"    pm.collectionVariables.set(\"access_token\", extractedValue.access);\r",
+									"    pm.collectionVariables.set(\"refresh_token\", extractedValue.refresh);\r",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\":\"sujeet@gmail.com\",\r\n    \"password\":\"adM!N@8848@\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/auth/token/access/",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"auth",
+								"token",
+								"access",
+								""
+							]
+						},
+						"description": "## Endpoint: Generate Access Token\n\nThis endpoint is used to generate an access token for user authentication. It accepts user credentials in the request body and returns an access token upon successful authentication.\n\n### Request\n\n- **Method**: POST\n    \n- **URL**: `{{baseurl}}/auth/token/access/`\n    \n\n#### Request Body\n\nThe request body must be in JSON format and include the following parameters:\n\n- **email** (string): The email address of the user attempting to authenticate.\n    \n- **password** (string): The password associated with the user's account.\n    \n\n**Example Request Body:**\n\n``` json\n{\n  \"email\": \"user@example.com\",\n  \"password\": \"your_password_here\"\n}\n\n ```\n\n### Response\n\nOn a successful request, the server responds with a status code of `200` and a JSON object containing the following fields:\n\n- **access** (string): The access token that can be used for subsequent authenticated requests.\n    \n- **refresh** (string): The refresh token, which can be used to obtain a new access token when the current one expires.\n    \n\n**Example Response:**\n\n``` json\n{\n  \"refresh\": \"\",\n  \"access\": \"\"\n}\n\n ```\n\n### Notes\n\n- Ensure that the email and password provided are valid and correspond to an existing user account.\n    \n- The access token is typically used for authorizing API requests, while the refresh token is used to obtain a new access token without requiring the user to re-enter their credentials."
+					},
+					"response": []
+				},
+				{
+					"name": "Verify Token",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"token\":\"{{access_token}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/auth/token/verify/",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"auth",
+								"token",
+								"verify",
+								""
+							]
+						},
+						"description": "## Verify Access Token\n\nThis endpoint is used to verify the validity of an access token. It ensures that the provided token is still active and has not expired or been revoked. This is crucial for maintaining secure access to protected resources within the application.\n\n### Request\n\n- **Method**: POST\n    \n- **Endpoint**: `{{baseurl}}/auth/token/verify/`\n    \n- **Content-Type**: application/json\n    \n\n#### Request Body\n\nThe request body must be a JSON object containing the following parameter:\n\n- **token** (string): The access token that needs to be verified. This token is typically generated during the authentication process and is required for accessing secured endpoints.\n    \n\n##### Example Request Body\n\n``` json\n{\n  \"token\": \"{{access_token}}\"\n}\n\n ```\n\n### Response\n\nUpon successful verification, the server will respond with a status code 200 if the token is valid.\n\nNotes\n\n- Ensure that the token is included in the request body for verification.\n    \n- The response status code will help determine if the user can proceed with accessing protected resources based on the validity of the token."
+					},
+					"response": []
+				},
+				{
+					"name": "Refresh Token",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"refresh\":\"{{refresh_token}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/auth/token/refresh/",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"auth",
+								"token",
+								"refresh",
+								""
+							]
+						},
+						"description": "## Refresh Token Endpoint\n\nThis endpoint is used to obtain a new access token using a valid refresh token. It allows users to maintain their authentication session without needing to re-enter their credentials.\n\n### Request\n\n- **Method**: POST\n    \n- **URL**: `{{baseurl}}/auth/token/refresh/`\n    \n\n#### Request Body\n\nThe request body must be in JSON format and should contain the following parameter:\n\n- **refresh** (string): The refresh token that is used to request a new access token.\n    \n\n**Example Request Body:**\n\n``` json\n{\n  \"refresh\": \"{{refresh_token}}\"\n}\n\n ```\n\n### Response\n\nOn success, the server will respond with a status code of `200` and a JSON object containing the following fields:\n\n- **access** (string): The newly generated access token.\n    \n- **refresh** (string): The refresh token, which can be used for future token refresh requests.\n    \n\n**Example Response:**\n\n``` json\n{\n  \"access\": \"\",\n  \"refresh\": \"\"\n}\n\n ```\n\n### Notes\n\n- Ensure that the refresh token provided is valid and has not expired.\n    \n- The response will contain empty strings for access and refresh tokens in this example; in a real scenario, these fields will be populated with valid tokens."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "Users List",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseurl}}/accounts/users/",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"accounts",
+								"users",
+								""
+							]
+						},
+						"description": "## API Endpoint: Retrieve User Accounts\n\n### Description\n\nThis endpoint retrieves a list of user accounts from the system. It is particularly useful for applications that need to display user information or manage user accounts.\n\n### Request\n\n- **Method**: GET\n    \n- **Endpoint**: `{{baseurl}}/accounts/users/`\n    \n- **Request Body**: No request body is required for this GET request.\n    \n\n### Response\n\n- **Status Code**: 200 OK\n    \n- **Content-Type**: application/json\n    \n- **Response Format**: The response is a JSON array containing user account objects. Each object includes the following fields:\n    \n    - `id`: Unique identifier for the user account.\n        \n    - `user_id`: Identifier associated with the user.\n        \n    - `email`: Email address of the user.\n        \n    - `username`: Username of the user.\n        \n    - `name`: Full name of the user.\n        \n    - `profile_pic`: URL to the user's profile picture.\n        \n    - `is_connected`: Boolean indicating if the user is currently connected.\n        \n    - `profile`: An object containing additional profile details:\n        \n        - `contact_number`: Contact number of the user.\n            \n        - `company_name`: Name of the company the user is associated with.\n            \n        - `address`: Address of the user.\n            \n        - `industry`: Industry in which the user operates.\n            \n\n### Example Response\n\n``` json\n[\n    {\n        \"id\": 0,\n        \"user_id\": null,\n        \"email\": \"\",\n        \"username\": \"\",\n        \"name\": \"\",\n        \"profile_pic\": \"\",\n        \"is_connected\": true,\n        \"profile\": {\n            \"contact_number\": \"\",\n            \"company_name\": \"\",\n            \"address\": \"\",\n            \"industry\": \"\"\n        }\n    }\n]\n\n ```\n\nThis structure allows clients to easily parse and utilize the user data for various functionalities within their applications."
+					},
+					"response": []
+				},
+				{
+					"name": "User Detail",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseurl}}/accounts/users/7/",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"accounts",
+								"users",
+								"7",
+								""
+							]
+						},
+						"description": "### Get User Account Details\n\nThis endpoint retrieves the details of a user account based on the specified user ID.\n\n#### Request\n\n- **Method**: GET\n    \n- **URL**: `{{baseurl}}/accounts/users/{user_id}/`\n    \n- **Path Parameter**:\n    \n    - `user_id` (required): The unique identifier of the user whose account details are being requested.\n        \n\n#### Response\n\n- **Status Code**: 200 OK\n    \n- **Content-Type**: application/json\n    \n- {\"id\": 0,\"user_id\": \"\",\"email\": \"\",\"username\": \"\",\"name\": \"\",\"profile_pic\": \"\",\"is_connected\": true,\"profile\": { \"contact_number\": \"\", \"company_name\": \"\", \"address\": \"\", \"industry\": \"\"}}\n    \n\n##### Response Fields:\n\n- `id`: The internal identifier for the user account.\n    \n- `user_id`: The unique identifier for the user.\n    \n- `email`: The email address associated with the user account.\n    \n- `username`: The username of the user.\n    \n- `name`: The full name of the user.\n    \n- `profile_pic`: URL to the user's profile picture.\n    \n- `is_connected`: A boolean indicating if the user is currently connected.\n    \n- `profile`: An object containing additional profile information:\n    \n    - `contact_number`: The user's contact number.\n        \n    - `company_name`: The name of the company the user is associated with.\n        \n    - `address`: The user's address.\n        \n    - `industry`: The industry in which the user operates.\n        \n\n#### Important Notes:\n\n- Ensure that the `user_id` is valid to receive the correct user details.\n    \n- The response will contain empty strings for fields that are not populated in the user account.\n    \n\nThis endpoint retrieves the details of a specific user identified by their unique user ID.\n\n### Request Parameters\n\n- **User ID**: The unique identifier for the user. In this case, it is set to `2`.\n    \n\n### Response\n\nUpon a successful request, the API will return a JSON object containing the following information about the user:\n\n- **id**: The unique identifier of the user.\n    \n- **name**: The full name of the user.\n    \n- **email**: The email address associated with the user account.\n    \n- **created_at**: The timestamp indicating when the user account was created.\n    \n\n### Notes\n\n- Ensure that the user ID provided in the request is valid and exists in the system.\n    \n- The response will return a 200 status code on success, while errors may result in different status codes indicating the nature of the issue (e.g., 404 for not found)."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Connections",
+			"item": [
+				{
+					"name": "My Connections",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseurl}}/accounts/connections/",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"accounts",
+								"connections",
+								""
+							]
+						},
+						"description": "## Endpoint: Get Account Connections\n\nThis endpoint retrieves a list of account connections associated with the user. It is a simple HTTP GET request that returns the details of each connection in a structured format.\n\n### Request\n\n- **Method**: GET\n    \n- **URL**: `{{baseurl}}/accounts/connections/`\n    \n\n### Response\n\n- **Status Code**: 200 OK\n    \n- **Content-Type**: application/json\n    \n\n#### Response Structure\n\nThe response contains an array of account connections, where each connection object includes the following fields:\n\n- **id** (integer): Unique identifier for the connection.\n    \n- **user_id** (string): Identifier for the user associated with the connection.\n    \n- **username** (string): Username of the account connection.\n    \n- **email** (string): Email address associated with the account connection.\n    \n- **name** (string): Full name of the account connection.\n    \n- **profile_pic** (string): URL of the profile picture for the account connection.\n    \n\nExample response:\n\n``` json\n[\n    {\n        \"id\": 0,\n        \"user_id\": \"\",\n        \"username\": \"\",\n        \"email\": \"\",\n        \"name\": \"\",\n        \"profile_pic\": \"\"\n    }\n]\n\n ```\n\n### Notes\n\n- The response will be an array, even if there are no connections, which will return an empty array `[]`.\n    \n- Ensure that the base URL is correctly set before making the request."
+					},
+					"response": []
+				},
+				{
+					"name": "Connections Request Sent",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseurl}}/accounts/connections/?type=sent",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"accounts",
+								"connections",
+								""
+							],
+							"query": [
+								{
+									"key": "type",
+									"value": "sent"
+								}
+							]
+						},
+						"description": "## Get Sent Connections\n\nThis endpoint retrieves a list of sent connection requests associated with the authenticated user's account.\n\n### Request\n\n- **Method**: GET\n    \n- **Endpoint**: `{{baseurl}}/accounts/connections/`\n    \n- **Query Parameters**:\n    \n    - `type` (required): Specifies the type of connection requests to retrieve. In this case, it should be set to `sent` to fetch sent connection requests.\n        \n\n### Response\n\n- **Status Code**: 200 OK\n    \n- **Content-Type**: application/json\n    \n- **Response Body**: An array of connection request objects, each containing the following fields:\n    \n    - `id`: Unique identifier for the connection request.\n        \n    - `to_user`: An object representing the recipient of the connection request, which includes:\n        \n        - `id`: Unique identifier for the user.\n            \n        - `user_id`: The user's account identifier.\n            \n        - `username`: The username of the recipient.\n            \n        - `email`: The email address of the recipient.\n            \n        - `name`: The full name of the recipient.\n            \n        - `profile_pic`: URL to the recipient's profile picture.\n            \n    - `status`: Current status of the connection request (e.g., pending, accepted).\n        \n    - `created_at`: Timestamp of when the connection request was created.\n        \n    - `updated_at`: Timestamp of the last update to the connection request.\n        \n\n### Notes\n\n- Ensure that the user is authenticated before making this request.\n    \n- The response will return an empty array if there are no sent connection requests."
+					},
+					"response": []
+				},
+				{
+					"name": "Connections Request Received",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseurl}}/accounts/connections/?type=received",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"accounts",
+								"connections",
+								""
+							],
+							"query": [
+								{
+									"key": "type",
+									"value": "received"
+								}
+							]
+						},
+						"description": "## Get Received Connections\n\nThis endpoint retrieves a list of connections that have been received by the user.\n\n### Request\n\n- **Method**: GET\n    \n- **Endpoint**: `{{baseurl}}/accounts/connections/`\n    \n- **Query Parameters**:\n    \n    - `type` (required): Specifies the type of connections to retrieve. In this case, the value should be set to `received`.\n        \n\n### Response\n\n- **Status Code**: 200 OK\n    \n- **Content-Type**: application/json\n    \n- **Response Format**: The response will be a JSON array containing objects with the following structure:\n    \n    - `id`: Unique identifier for the connection.\n        \n    - `from_user`: An object containing details about the user who initiated the connection, including:\n        \n        - `id`: Unique identifier for the user.\n            \n        - `user_id`: The user's ID.\n            \n        - `username`: The username of the user.\n            \n        - `email`: The user's email address.\n            \n        - `name`: The name of the user.\n            \n        - `profile_pic`: URL to the user's profile picture.\n            \n    - `status`: The current status of the connection.\n        \n    - `created_at`: Timestamp when the connection was created.\n        \n    - `updated_at`: Timestamp when the connection was last updated.\n        \n\nThis endpoint is useful for users to manage and view incoming connection requests."
+					},
+					"response": []
+				},
+				{
+					"name": "Send Connection Request",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"to_user\":2\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/accounts/connections/",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"accounts",
+								"connections",
+								""
+							]
+						},
+						"description": "## Create Account Connection\n\nThis endpoint allows users to create a new connection to another user account. By sending a POST request to the specified URL, you can establish a connection with the user identified by the `to_user` parameter.\n\n### Request\n\n**Method:** POST  \n**Endpoint:** `{{baseurl}}/accounts/connections/`\n\n#### Request Body\n\nThe request body must be in JSON format and should include the following parameter:\n\n- **to_user** (integer): The ID of the user you want to connect with. This is a required field.\n    \n\n**Example Request Body:**\n\n``` json\n{\n  \"to_user\": 7\n}\n\n ```\n\n### Response\n\nUpon a successful request, the server will respond with a status code of `201 Created` and a JSON object containing the details of the newly created connection.\n\n#### Response Structure\n\nThe response will include the following fields:\n\n- **id** (integer): The unique identifier for the connection.\n    \n- **to_user** (object): An object representing the user you are connected to, which includes:\n    \n    - **id** (integer): The unique identifier of the connected user.\n        \n    - **user_id** (string): The user ID of the connected user.\n        \n    - **username** (string): The username of the connected user.\n        \n    - **email** (string): The email address of the connected user.\n        \n    - **name** (string): The full name of the connected user.\n        \n    - **profile_pic** (string): The URL of the connected user's profile picture.\n        \n- **status** (string): The status of the connection.\n    \n- **created_at** (string): The timestamp when the connection was created.\n    \n- **updated_at** (string): The timestamp when the connection was last updated.\n    \n\n**Example Response:**\n\n``` json\n{\n  \"id\": 0,\n  \"to_user\": {\n    \"id\": 0,\n    \"user_id\": \"\",\n    \"username\": \"\",\n    \"email\": \"\",\n    \"name\": \"\",\n    \"profile_pic\": \"\"\n  },\n  \"status\": \"\",\n  \"created_at\": \"\",\n  \"updated_at\": \"\"\n}\n\n ```\n\nThis endpoint is essential for managing user connections within the application, facilitating social interactions and networking."
+					},
+					"response": []
+				},
+				{
+					"name": "Accept Connection Request",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"status\":\"accepted\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/accounts/connections/12/?type=received",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"accounts",
+								"connections",
+								"12",
+								""
+							],
+							"query": [
+								{
+									"key": "type",
+									"value": "received"
+								}
+							]
+						},
+						"description": "## PATCH /accounts/connections/{id}/\n\nThis endpoint is used to update the status of a specific connection associated with an account.\n\n### Request Body\n\nThe request requires a JSON payload with the following parameter:\n\n- **status** (string): The new status to be set for the connection. In the last request, this was set to `\"accepted\"`.\n    \n\n### Response\n\nUpon a successful request, the server responds with a status code of **200** and a JSON object containing the following fields:\n\n- **id** (integer): The identifier of the connection.\n    \n- **from_user** (object): An object representing the user associated with the connection, which includes:\n    \n    - **id** (integer): The identifier of the user.\n        \n    - **user_id** (string): The unique user ID.\n        \n    - **username** (string): The username of the user.\n        \n    - **email** (string): The email address of the user.\n        \n    - **name** (string): The full name of the user.\n        \n    - **profile_pic** (string): The URL of the user's profile picture.\n        \n- **status** (string): The updated status of the connection.\n    \n- **created_at** (string): The timestamp when the connection was created.\n    \n- **updated_at** (string): The timestamp when the connection was last updated.\n    \n\nThis endpoint allows clients to effectively manage the status of connections within their accounts.\n\nThis endpoint is used to update the status of a specific account connection identified by its unique ID. In this case, the ID is `11`. The primary purpose of this request is to modify the connection's current status to reflect a new state, which in this example is set to \"accepted\".\n\n#### Request Body\n\nThe request accepts a JSON payload with the following structure:\n\n- **status** (string): The new status to be assigned to the connection. Valid values may include states such as \"accepted\", \"pending\", or \"rejected\". In this instance, the status is being updated to \"accepted\".\n    \n\n#### Example Request\n\n``` json\n{\n  \"status\": \"accepted\"\n}\n\n ```\n\n#### Response Structure\n\nUpon successfully processing the request, the server will return a response indicating the result of the update operation. The response typically includes:\n\n- **success** (boolean): Indicates whether the update was successful.\n    \n- **message** (string): Provides additional information about the operation, such as confirmation of the status change.\n    \n- **data** (object): Contains the updated connection details, including the new status and any other relevant information.\n    \n\n### Notes\n\n- Ensure that the connection ID in the URL corresponds to an existing connection.\n    \n- The status value should be one of the accepted states to avoid validation errors.\n    \n\nThis endpoint is crucial for managing the state of account connections within the application, allowing for dynamic updates based on user actions or system events."
+					},
+					"response": []
+				},
+				{
+					"name": "Reject Connection Request",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"status\":\"rejected\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/accounts/connections/10/?type=received",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"accounts",
+								"connections",
+								"10",
+								""
+							],
+							"query": [
+								{
+									"key": "type",
+									"value": "received"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Connection Request Detail",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseurl}}/accounts/connections/1/?type=sent",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"accounts",
+								"connections",
+								"1",
+								""
+							],
+							"query": [
+								{
+									"key": "type",
+									"value": "sent"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Connection Request",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseurl}}/accounts/connections/11/",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"accounts",
+								"connections",
+								"11",
+								""
+							]
+						},
+						"description": "## DELETE /accounts/connections/{id}/\n\nThis endpoint is used to remove a specific connection associated with a user account. The `{id}` parameter in the URL represents the unique identifier of the connection request that you wish to delete.\n\n### Request Parameters\n\n- **Path Parameter:**\n    \n    - `id` (required): The unique identifier of the connection request to be removed.\n        \n\n### Response\n\nUpon successful deletion of the connection, the server will respond with:\n\n- **Status Code:** 204 No Content\n    \n- **Content-Type:** text/xml\n    \n\nA 204 status indicates that the request was successful and there is no content to return in the response body."
+					},
+					"response": []
+				},
+				{
+					"name": "Remove Connection",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseurl}}/accounts/connections/7/remove/",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"accounts",
+								"connections",
+								"7",
+								"remove",
+								""
+							]
+						},
+						"description": "## DELETE /accounts/connections/{id}/\n\nThis endpoint is used to remove a specific connection associated with a user account. The `{id}` parameter in the URL represents the unique identifier of the connection request that you wish to delete.\n\n### Request Parameters\n\n- **Path Parameter:**\n    \n    - `id` (required): The unique identifier of the connection request to be removed.\n        \n\n### Response\n\nUpon successful deletion of the connection, the server will respond with:\n\n- **Status Code:** 204 No Content\n    \n- **Content-Type:** text/xml\n    \n\nA 204 status indicates that the request was successful and there is no content to return in the response body."
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{access_token}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					"pm.sendRequest({\r",
+					"    url: pm.collectionVariables.get(\"baseurl\") + \"/auth/token/verify/\",\r",
+					"    method: \"POST\",\r",
+					"    header: {\r",
+					"        \"Content-Type\": \"application/json\"\r",
+					"    },\r",
+					"    body: {\r",
+					"        mode: \"raw\",\r",
+					"        raw: JSON.stringify({\r",
+					"            token: pm.collectionVariables.get(\"access_token\")\r",
+					"        })\r",
+					"    }\r",
+					"}, function (err, response) {\r",
+					"    if (err) {\r",
+					"        console.error(\"Error verifying token:\", err);\r",
+					"    } else if (response.code === 401) {\r",
+					"        console.log(\"Access token is invalid or expired. Trying to refresh...\");\r",
+					"\r",
+					"        // Trigger another API call to refresh the token\r",
+					"        pm.sendRequest({\r",
+					"            url: pm.collectionVariables.get(\"baseurl\") + \"/auth/token/refresh/\",\r",
+					"            method: \"POST\",\r",
+					"            header: {\r",
+					"                \"Content-Type\": \"application/json\"\r",
+					"            },\r",
+					"            body: {\r",
+					"                mode: \"raw\",\r",
+					"                raw: JSON.stringify({\r",
+					"                    refresh: pm.collectionVariables.get(\"refresh_token\")\r",
+					"                })\r",
+					"            }\r",
+					"        }, function (refreshErr, refreshRes) {\r",
+					"            if (refreshErr) {\r",
+					"                console.error(\"Token refresh failed:\", refreshErr);\r",
+					"            } else if (refreshRes.code === 200) {\r",
+					"                const newAccessToken = refreshRes.json().access;\r",
+					"                pm.collectionVariables.set(\"access_token\", newAccessToken);\r",
+					"                console.log(\"Access token refreshed and updated.\");\r",
+					"            } else {\r",
+					"                console.error(\"Unexpected response during token refresh:\", refreshRes);\r",
+					"            }\r",
+					"        });\r",
+					"    } else {\r",
+					"        console.log(\"Access token is valid.\");\r",
+					"    }\r",
+					"});\r",
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseurl",
+			"value": "http://localhost:8000",
+			"type": "string"
+		},
+		{
+			"key": "username",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "password",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "access_token",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "refresh_token",
+			"value": "",
+			"type": "string"
+		}
+	]
+}

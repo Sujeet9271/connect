@@ -235,10 +235,12 @@ class ConnectionRemove(APIView):
     permission_classes = [IsAuthenticated]
 
     def delete(self, request, id):
-        # to delete user's pending connection
-        ConnectionRequest.objects.filter(Q(from_user=request.user, to_user_id=id)|Q(to_user=request.user, from_user_id=id)).last().delete()
-        request.user.connections.remove(id)
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        # to delete user's connection
+        connection = ConnectionRequest.objects.filter(Q(from_user=request.user, to_user_id=id)|Q(to_user=request.user, from_user_id=id)).last()
+        if connection:
+            request.user.connections.remove(id)
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        return Response(status=status.HTTP_404_NOT_FOUND)
 
 
 remove_connection = ConnectionRemove.as_view()
