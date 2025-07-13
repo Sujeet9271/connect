@@ -1,6 +1,10 @@
 from rest_framework import serializers
+
+from django.db.models import Q
+
 from accounts.models import Users, UserDetail, ConnectionRequest
 
+from core.logger import logger
 
 class UserDetailSerializer(serializers.ModelSerializer):
     class Meta:
@@ -14,6 +18,16 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = Users
         fields = ['id', 'email', 'username', 'name', 'profile']
+
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        logger.debug(f'{data=}')
+        profile_detail = data.pop('profile',{})
+        logger.debug(f'{profile_detail=}')
+        if profile_detail:
+            data.update(profile_detail)
+        return data
+
 
 class RegisterSerializer(serializers.ModelSerializer):
     contact_number = serializers.CharField(write_only=True)
@@ -39,8 +53,8 @@ class ConnectionRequestSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ConnectionRequest
-        fields = ['id', 'from_user', 'to_user', 'status', 'created_at']
-        read_only_fields = ['id', 'from_user', 'created_at', 'status']
+        fields = ['id', 'from_user', 'to_user', 'status', 'created_at', 'updated_at']
+        read_only_fields = ['id', 'from_user', 'to_user', 'created_at', 'updated_at']
 
 
 class SendConnectionRequestSerializer(serializers.ModelSerializer):
@@ -49,10 +63,20 @@ class SendConnectionRequestSerializer(serializers.ModelSerializer):
         fields = ['to_user']
 
     def validate_to_user(self, to_user):
-        if to_user == self.context['request'].user:
+        from_user = self.context['request'].user
+
+        if from_user == to_user:
             raise serializers.ValidationError("Cannot send request to yourself.")
+
+        # check for existing request or connection between the sender and receiver
+        if ConnectionRequest.objects.filter(
+            Q(from_user=from_user, to_user=to_user) |
+            Q(from_user=to_user, to_user=from_user)
+        ).exists():
+            raise serializers.ValidationError("A connection request already exists or you are already connected.")
         return to_user
 
     def create(self, validated_data):
         from_user = self.context['request'].user
         return ConnectionRequest.objects.create(from_user=from_user, **validated_data)
+

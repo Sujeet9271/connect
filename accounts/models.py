@@ -39,8 +39,8 @@ class UserManager(BaseUserManager):
 
 
 
-def location(instance, filename):
-    return
+def location(instance,filename):
+    return f'profile/{instance.username.replace(' ','_')}/{filename}'
 
 
 class Users(AbstractBaseUser, PermissionsMixin):
@@ -63,10 +63,7 @@ class Users(AbstractBaseUser, PermissionsMixin):
     def get_fullname(self):
         return f'{self.name}'
 
-    def profile_pic_url(self):
-        if self.profile_pic:
-            return self.profile_pic.url
-        return f"{settings.STATIC_URL}/assets_new/images/user.png"
+    
     
     
     class Meta:
@@ -74,7 +71,6 @@ class Users(AbstractBaseUser, PermissionsMixin):
         verbose_name = 'User'
         verbose_name_plural = 'Users'
 
-    
 
 class UserDetail(models.Model):
     user = models.OneToOneField(Users, on_delete=models.CASCADE, related_name='profile',primary_key=True)
@@ -84,18 +80,25 @@ class UserDetail(models.Model):
     address = models.CharField(max_length=255)
     industry = models.CharField(max_length=255)
 
+    def profile_pic_url(self):
+        if self.profile_pic:
+            return self.profile_pic.url
+        return f"{settings.STATIC_URL}/assets_new/images/user.png"
 
     class Meta:
         verbose_name = "User's Detail"
         verbose_name_plural = "User's Detail"
 
+
 class ConnectionRequest(models.Model):
     from_user = models.ForeignKey(Users, related_name='sent_requests', on_delete=models.CASCADE)
     to_user = models.ForeignKey(Users, related_name='received_requests', on_delete=models.CASCADE)
-    status = models.CharField(max_length=10, choices=[('pending', 'Pending'), ('accepted', 'Accepted'), ('rejected', 'Rejected')])
+    status = models.CharField(max_length=10, choices=[('pending', 'Pending'), ('accepted', 'Accepted')], default='pending')
     created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         verbose_name = "Connection Request"
         verbose_name_plural = "Connection Requests"
         unique_together = ('from_user', 'to_user')
+        ordering = ['-updated_at', 'status']
