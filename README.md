@@ -22,6 +22,27 @@ A Django-based platform for user registration, authentication, real-time connect
 - **Database**: Sqlite
 - **Deployment**: Docker, Docker Compose
 
+## Folder Structure
+```connect/
+├── core/
+├── auth/
+├── accounts/
+├── notification/
+├── templates/
+├── nginx/
+├── README.md  ✅
+├── manage.py
+├── requirements.txt
+├── [Postman collection](./Connection Managemnt.postman_collection.json)
+├── docker-compose.yml
+├── Dockerfile
+├── Dockerfile.celery
+├── .env.example
+├── entrypoint.sh/
+└── ...
+```
+
+
 ## ⚙️ Installation
 
 ```bash
