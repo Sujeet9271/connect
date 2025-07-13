@@ -85,7 +85,7 @@ class Users(AbstractBaseUser, PermissionsMixin):
 
 class UserDetail(models.Model):
     user = models.OneToOneField(Users, on_delete=models.CASCADE, related_name='profile',primary_key=True)
-    contact_number = models.CharField(max_length=20)
+    contact_number = models.CharField(max_length=20, unique=True)
     company_name = models.CharField(max_length=255)
     address = models.CharField(max_length=255)
     industry = models.CharField(max_length=255)
