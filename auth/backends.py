@@ -2,7 +2,7 @@ from rest_framework.authentication import BaseAuthentication
 from django.contrib.auth import get_user_model
 from rest_framework import exceptions
 from auth.authentication import decode_jwt
-
+from core.logger import logger
 User = get_user_model()
 
 class JWTAuthentication(BaseAuthentication):
@@ -26,5 +26,5 @@ class JWTAuthentication(BaseAuthentication):
             user = User.objects.get(id=payload['user_id'])
         except User.DoesNotExist:
             raise exceptions.AuthenticationFailed('User not found')
-
+        logger.debug(f'{user=}')
         return (user, None)

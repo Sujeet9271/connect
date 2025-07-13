@@ -44,6 +44,7 @@ INSTALLED_APPS = [
 
     'rest_framework',
     'rest_framework_simplejwt.token_blacklist',
+    "corsheaders",
 
     'accounts',
     'notifications',
@@ -54,6 +55,8 @@ AUTH_USER_MODEL = 'accounts.Users'
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
+    "corsheaders.middleware.CorsMiddleware",
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -65,7 +68,20 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'auth.backends.JWTAuthentication',
     ],
+    'DEFAULT_THROTTLE_CLASSES': [
+        'rest_framework.throttling.UserRateThrottle',
+        'rest_framework.throttling.AnonRateThrottle',
+    ],
+    'DEFAULT_THROTTLE_RATES': {
+        'user': '1000/day',
+        'anon': '100/day',
+    }
 }
+
+
+CORS_ALLOW_ALL_ORIGINS=config('CORS_ALLOW_ALL_ORIGINS', default=False, cast=bool)
+if not CORS_ALLOW_ALL_ORIGINS:
+    CORS_ALLOWED_ORIGINS = config('CORS_ALLOWED_ORIGINS', cast=str).split(',')
 
 
 SIMPLE_JWT = {
@@ -97,6 +113,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'core.wsgi.application'
+ASGI_APPLICATION = "core.asgi.application"
 
 
 # Database
@@ -151,7 +168,7 @@ STATICFILES_DIRS = [
  ]
 
 STATIC_ROOT = os.path.join(BASE_DIR,'staticfiles')
-
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR,'media')
 
@@ -183,3 +200,20 @@ DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL',default='')
 
 
 SITE_ID = 1
+
+
+if not DEBUG:
+    CSRF_COOKIE_SECURE = True  # Only send CSRF cookie over HTTPS
+    SESSION_COOKIE_SECURE = True  # Only send session cookie over HTTPS
+    CSRF_COOKIE_HTTPONLY = True  # Mitigates XSS
+    SESSION_COOKIE_HTTPONLY = True
+
+    SECURE_SSL_REDIRECT = True  # Redirect HTTP to HTTPS
+    SECURE_BROWSER_XSS_FILTER = True  # Prevent reflected XSS
+    SECURE_CONTENT_TYPE_NOSNIFF = True  # Prevent MIME-type sniffing
+    SECURE_HSTS_SECONDS = 31536000  # Enforce HTTPS for 1 year
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_HSTS_PRELOAD = True
+
+    X_FRAME_OPTIONS = 'DENY'  # Prevent clickjacking
+
