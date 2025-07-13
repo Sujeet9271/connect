@@ -73,7 +73,7 @@ token_verify = TokenVerifyView.as_view()
 
 class UserViewSet(ReadOnlyModelViewSet):
     queryset = Users.objects.none()
-    serializer_class = UserListSerializer
+    serializer_class = UserDetailSerializer
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
@@ -86,7 +86,19 @@ class UserViewSet(ReadOnlyModelViewSet):
             Q(from_user=OuterRef('pk'), to_user=user)
         )
 
-        return Users.objects.exclude(id=user.id).annotate(
+        query = self.request.query_params.get('q', '').strip()
+        if query:
+            logger.debug(f'{query=}')
+            return Users.objects.select_related('profile').filter(
+                            Q(name__icontains=query) |
+                            Q(email__icontains=query) |
+                            Q(profile__contact_number__icontains=query) |
+                            Q(profile__company_name__icontains=query)
+                        ).exclude(id=self.request.user.id).annotate(
+                            is_connected=Exists(accepted_connections)
+                        )
+
+        return Users.objects.select_related('profile').exclude(id=user.id).annotate(
             is_connected=Exists(accepted_connections)
         )
     

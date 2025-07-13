@@ -65,12 +65,22 @@ class Users(AbstractBaseUser, PermissionsMixin):
 
     def get_fullname(self):
         return f'{self.name}'
+    
+    def profile_pic_url(self):
+        if self.profile_pic:
+            return self.profile_pic.url
+        return f"{settings.STATIC_URL}/assets_new/images/user.png"
 
     
     class Meta:
         db_table='users'
         verbose_name = 'User'
         verbose_name_plural = 'Users'
+        indexes = [
+            models.Index(fields=['email']),
+            models.Index(fields=['username']),
+            models.Index(fields=['name']),
+        ]
 
 
 class UserDetail(models.Model):
@@ -80,14 +90,14 @@ class UserDetail(models.Model):
     address = models.CharField(max_length=255)
     industry = models.CharField(max_length=255)
 
-    def profile_pic_url(self):
-        if self.profile_pic:
-            return self.profile_pic.url
-        return f"{settings.STATIC_URL}/assets_new/images/user.png"
-
     class Meta:
         verbose_name = "User's Detail"
         verbose_name_plural = "User's Detail"
+
+        indexes = [
+            models.Index(fields=['contact_number']),
+            models.Index(fields=['company_name']),
+        ]
 
 
 class ConnectionRequest(models.Model):

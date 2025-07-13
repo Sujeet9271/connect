@@ -15,19 +15,12 @@ class UserProfileSerializer(serializers.ModelSerializer):
 
 class UserDetailSerializer(serializers.ModelSerializer):
     profile = UserProfileSerializer(read_only=True)
+    is_connected = serializers.BooleanField()
 
     class Meta:
         model = Users
-        fields = ['id', 'email', 'username', 'name', 'profile_pic', 'profile']
+        fields = ['id', 'email', 'username', 'name', 'profile_pic', 'is_connected', 'profile']
 
-    # def to_representation(self, instance):
-    #     data = super().to_representation(instance)
-    #     logger.debug(f'{data=}')
-    #     profile_detail = data.pop('profile',{})
-    #     logger.debug(f'{profile_detail=}')
-    #     if profile_detail:
-    #         data.update(profile_detail)
-    #     return data
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
