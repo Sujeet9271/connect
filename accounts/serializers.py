@@ -6,14 +6,15 @@ from accounts.models import Users, UserDetail, ConnectionRequest
 
 from core.logger import logger
 
-class UserDetailSerializer(serializers.ModelSerializer):
+
+class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserDetail
         fields = ['contact_number', 'company_name', 'address', 'industry', 'profile_pic']
 
 
-class UserSerializer(serializers.ModelSerializer):
-    profile = UserDetailSerializer(read_only=True)
+class UserDetailSerializer(serializers.ModelSerializer):
+    profile = UserProfileSerializer(read_only=True)
 
     class Meta:
         model = Users
@@ -27,6 +28,23 @@ class UserSerializer(serializers.ModelSerializer):
         if profile_detail:
             data.update(profile_detail)
         return data
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Users
+        fields = [
+            'id', 'username', 'email', 'name',
+        ]
+
+class UserListSerializer(serializers.ModelSerializer):
+    is_connected = serializers.BooleanField()
+
+    class Meta:
+        model = Users
+        fields = [
+            'id', 'username', 'email', 'name', 'is_connected',
+        ]
+
 
 
 class RegisterSerializer(serializers.ModelSerializer):
@@ -55,6 +73,25 @@ class ConnectionRequestSerializer(serializers.ModelSerializer):
         model = ConnectionRequest
         fields = ['id', 'from_user', 'to_user', 'status', 'created_at', 'updated_at']
         read_only_fields = ['id', 'from_user', 'to_user', 'created_at', 'updated_at']
+
+
+class ConnectionRequestReceived(serializers.ModelSerializer):
+    from_user = UserSerializer(read_only=True)
+
+    class Meta:
+        model = ConnectionRequest
+        fields = ['id', 'from_user', 'status', 'created_at', 'updated_at']
+        read_only_fields = ['id', 'from_user', 'created_at', 'updated_at']
+
+
+class ConnectionRequestSent(serializers.ModelSerializer):
+    to_user = UserSerializer(read_only=True)
+
+    class Meta:
+        model = ConnectionRequest
+        fields = ['id', 'to_user', 'status', 'created_at', 'updated_at']
+        read_only_fields = ['id', 'to_user', 'status', 'created_at', 'updated_at']
+
 
 
 class SendConnectionRequestSerializer(serializers.ModelSerializer):

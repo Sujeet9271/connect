@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Account Activation</title>
+    <style>
+        body {
+            font-family: 'Lota Grotesque', ui-sans-serif, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+            margin: auto;
+            padding: 20px;
+        }
+
+        .btn {
+            background-color: #0089ff;
+            color: #ffffff !important;
+            text-decoration: none;
+            font-weight: 600;
+            padding: 10px 20px;
+            display: inline-block;
+            font-size: 14px;
+            border-radius: 4px;
+        }
+
+        p {
+            font-size: 14px;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <p>Dear {{ user.name }},</p>
+
+        <p>Welcome to <strong>Connect</strong>!</p>
+
+        <p>
+            We are delighted to welcome you to our platform. To complete the account setup process and ensure the security of your Connect account, please follow the link below to activate your account:
+        </p>
+
+        <p style="text-align: center;">
+            <a href="{{ absurl }}" class="btn">Complete Setup</a>
+        </p>
+
+        <p>Best Regards,</p>
+        <p>Connect Team</p>
+    </div>
+</body>
+</html>

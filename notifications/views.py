@@ -15,7 +15,7 @@ class NotificationViewSet(ModelViewSet):
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        return Notification.objects.filter(recipient=self.request.user)
+        return Notification.objects.select_related('recipient','sender').filter(recipient=self.request.user)
     
     def update(self, request, *args, **kwargs):
         notification:Notification = self.get_object()

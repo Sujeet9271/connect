@@ -46,11 +46,18 @@ def location(instance,filename):
 class Users(AbstractBaseUser, PermissionsMixin):
     email           = models.EmailField(verbose_name='Email', unique=True)
     username        = models.CharField(verbose_name='Username',max_length=255, unique=True)
-    name            = models.CharField(verbose_name='Name', max_length=255, blank=True)
+    name            = models.CharField(verbose_name='Name', max_length=255,)
     is_active       = models.BooleanField(verbose_name='Active', default=False)
     is_staff        = models.BooleanField(verbose_name='Staff', default=False)
     is_superuser    = models.BooleanField(verbose_name='Superuser', default=False)
     date_joined     = models.DateField(verbose_name='date joined', auto_now_add=True, auto_now=False)
+
+    connections = models.ManyToManyField(
+        'self',
+        through='ConnectionRequest',
+        symmetrical=False,
+        related_name='related_to'
+    )
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username', 'name',]
@@ -63,8 +70,6 @@ class Users(AbstractBaseUser, PermissionsMixin):
     def get_fullname(self):
         return f'{self.name}'
 
-    
-    
     
     class Meta:
         db_table='users'

@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import include, path
 from rest_framework.routers import DefaultRouter
 from accounts import views
 
@@ -16,4 +16,5 @@ urlpatterns = [
     path('token/verify/', views.token_verify,name="token_verify"),
     path('profile/', views.user_profile, name='user_profile'),
     path('connections/<int:id>/', views.connection_actions, name='connection_actions'),
+    path('confirm/<uidb64>/<token>/', views.activate_user, name='activate_user'),
 ]

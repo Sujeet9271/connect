@@ -13,13 +13,13 @@ app.conf.enable_UTC = False
 app.conf.update(timezone=config('TIME_ZONE', default='Asia/Kathmandu', cast=str))
 app.config_from_object('django.conf:settings', namespace='CELERY')
 
-app.conf.task_routes = {
+# app.conf.task_routes = {
                     
-                        }
+#                         }
 
 
 # Load task modules from all registered Django apps.
-# app.autodiscover_tasks()
+app.autodiscover_tasks()
 
 
 @app.task(bind=True)

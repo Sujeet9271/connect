@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
 
     'rest_framework',
     'rest_framework_simplejwt.token_blacklist',
@@ -82,7 +83,7 @@ ROOT_URLCONF = 'core.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR/'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -158,3 +159,16 @@ CELERY_TASK_SERIALIZER = 'json'
 CELERY_TIMEZONE = TIME_ZONE
 CELERY_CREATE_MISSING_QUEUES = False
 CELERY_RESULT_BACKEND = config('CELERY_RESULT_BACKEND')
+
+
+# For sending emails
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = config('EMAIL_HOST')
+EMAIL_PORT = config('EMAIL_PORT')
+EMAIL_HOST_USER = config('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD=config('EMAIL_HOST_PASSWORD')
+EMAIL_USE_TLS = config('EMAIL_USE_TLS',cast=bool)
+DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL',default='')
+
+
+SITE_ID = 1
