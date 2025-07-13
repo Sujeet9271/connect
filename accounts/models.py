@@ -52,12 +52,7 @@ class Users(AbstractBaseUser, PermissionsMixin):
     is_superuser    = models.BooleanField(verbose_name='Superuser', default=False)
     date_joined     = models.DateField(verbose_name='date joined', auto_now_add=True, auto_now=False)
 
-    connections = models.ManyToManyField(
-        'self',
-        through='ConnectionRequest',
-        symmetrical=False,
-        related_name='related_to'
-    )
+    connections = models.ManyToManyField('self',symmetrical=True)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username', 'name',]
@@ -101,6 +96,9 @@ class ConnectionRequest(models.Model):
     status = models.CharField(max_length=10, choices=[('pending', 'Pending'), ('accepted', 'Accepted')], default='pending')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f'id={self.id}, from_user={self.from_user_id}, to_user={self.to_user_id}, status={self.status}'
 
     class Meta:
         verbose_name = "Connection Request"

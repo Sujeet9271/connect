@@ -158,20 +158,17 @@ class ConnectionRequestViewSet(ModelViewSet):
             return self.request.user.sent_requests.filter(status='pending')
         elif view_type == 'received':
             return self.request.user.received_requests.filter(status='pending')
-        return ConnectionRequest.objects.select_related('from_user', 'to_user').filter(Q(from_user=user) | Q(to_user=user),)
+        return self.request.user.connections.all()
 
     def list(self, request, *args, **kwargs):
         view_type = self.request.query_params.get('type')
         queryset = self.get_queryset()
         if view_type == 'sent':
-            # queryset = self.request.user.sent_requests.filter(status='pending')
             serializer = ConnectionRequestSent(queryset, many=True)
         elif view_type == 'received':
-            # queryset = self.request.user.received_requests.filter(status='pending')
             serializer = ConnectionRequestReceived(queryset, many=True)
         else:
-            # queryset = ConnectionRequest.objects.select_related('from_user', 'to_user').filter(Q(from_user=user) | Q(to_user=user),)
-            serializer = ConnectionRequestSerializer(queryset, many=True)
+            serializer = UserSerializer(queryset, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
         
 
@@ -204,7 +201,7 @@ class ConnectionRequestViewSet(ModelViewSet):
     def partial_update(self, request, *args, **kwargs):
         # accept pending connection request
         update_data = {
-            'status':'accept'
+            'status':'accepted'
         }
         serializer = self.serializer_class
         instance:ConnectionRequest = ConnectionRequest.objects.filter(id=kwargs.get(self.lookup_field), to_user=request.user, status='pending').first()

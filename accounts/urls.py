@@ -15,6 +15,5 @@ urlpatterns = [
     path('token/refresh/', views.token_refresh,name="token_refresh"),
     path('token/verify/', views.token_verify,name="token_verify"),
     path('profile/', views.user_profile, name='user_profile'),
-    path('connections/<int:id>/', views.connection_actions, name='connection_actions'),
     path('confirm/<uidb64>/<token>/', views.activate_user, name='activate_user'),
 ]

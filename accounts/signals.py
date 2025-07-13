@@ -27,3 +27,6 @@ def post_save_user(sender, instance:Users, created:bool, *args, **kwargs):
 def post_save_connection_request(sender, instance:ConnectionRequest, created:bool, *args, **kwargs):
     if created:
         send_connection_notification.delay(recipient_id=instance.to_user_id, sender_id=instance.from_user_id, action=instance.status)
+    
+    if instance.status == 'accepted':
+        instance.from_user.connections.add(instance.to_user)
