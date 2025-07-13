@@ -11,8 +11,8 @@ class ProfileInline(admin.StackedInline):
 
 @admin.register(Users)
 class AccountUserAdmin(UserAdmin):
-    list_display=['id','email','username','name', 'is_staff','is_active','date_joined']
-    list_display_links=['id','email',]
+    list_display=['id', 'user_id','email','username','name', 'is_staff','is_active','date_joined']
+    list_display_links=['id', 'user_id','email',]
     list_filter = ['is_active','is_staff','is_superuser','date_joined']
     readonly_fields = ('date_joined','last_login')
     search_fields = ['email','name','username']

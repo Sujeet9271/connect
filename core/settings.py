@@ -66,7 +66,8 @@ MIDDLEWARE = [
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        'auth.authentication.InactivityJWTAuthentication',
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+        # 'auth.authentication.InactivityJWTAuthentication',
     ],
     'DEFAULT_THROTTLE_CLASSES': [
         'rest_framework.throttling.UserRateThrottle',
@@ -89,12 +90,13 @@ SIMPLE_JWT = {
     'REFRESH_TOKEN_LIFETIME': timedelta(hours=config('REFRESH_TOKEN_LIFETIME', default=24, cast=int)),
     'UPDATE_LAST_LOGIN': True,
 
+    'ROTATE_REFRESH_TOKENS': True,
+    'BLACKLIST_AFTER_ROTATION': True,
+
     'AUTH_HEADER_TYPES': ('Bearer', 'JWT'),
-    'AUTH_HEADER_NAME': 'AUTHORIZATION',
+    'AUTH_HEADER_NAME': 'HTTP_AUTHORIZATION',
     'USER_ID_FIELD': 'id',
     'USER_ID_CLAIM': 'user_id',
-
-    "AUTH_HEADER_TYPES": ("Bearer",),
 }
 
 ROOT_URLCONF = 'core.urls'
@@ -203,6 +205,21 @@ DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL',default='')
 
 SITE_ID = 1
 
+
+REDIS_CACHE = config('REDIS_CACHE',default='',cast=str)
+if REDIS_CACHE:
+    CACHES = {
+        "default": {
+            "BACKEND": "django_redis.cache.RedisCache",
+            "LOCATION": REDIS_CACHE,
+            "OPTIONS": {
+                "CLIENT_CLASS": "django_redis.client.DefaultClient",
+            }
+        }
+    }
+
+
+CSRF_TRUSTED_ORIGINS = config('CSRF_TRUSTED_ORIGINS').split(',')
 
 if not DEBUG:
     CSRF_COOKIE_SECURE = True  # Only send CSRF cookie over HTTPS

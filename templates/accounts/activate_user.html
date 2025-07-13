@@ -43,9 +43,17 @@
         <p>
             We are delighted to welcome you to our platform. To complete the account setup process and ensure the security of your Connect account, please follow the link below to activate your account:
         </p>
-
+        
         <p style="text-align: center;">
-            <a href="{{ absurl }}" class="btn">Complete Setup</a>
+            <a href="{{ activation_url }}" 
+            style="background-color: #0089ff; color: #ffffff; text-decoration: none; font-weight: 600; padding: 10px 20px; display: inline-block; font-size: 14px; border-radius: 4px;" 
+            target="_blank">
+                Complete Setup
+            </a>
+        </p>
+        <p>
+            If the button is not clickable, copy and paste the url in browser:<br>
+            {{activation_url}}
         </p>
 
         <p>Best Regards,</p>

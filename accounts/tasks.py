@@ -23,7 +23,7 @@ def send_confirmation_mail(user_id):
         baseurl = Site.objects.get_current().domain
         absurl = f"{baseurl}{relativeLink}"
         logger.debug(f'{absurl=}')
-        email_body = render_to_string('accounts/activate_user.html', {'reset_url': absurl,'uidb64':uidb64,'token':token,'domain':baseurl,'user':user,'reply_mail':settings.EMAIL_HOST_USER})
+        email_body = render_to_string('accounts/activate_user.html', {'activation_url': absurl,'uidb64':uidb64,'token':token,'domain':baseurl,'user':user,'reply_mail':settings.EMAIL_HOST_USER})
         email = EmailMessage(subject='Account Activation' ,body=email_body, from_email=settings.EMAIL_HOST_USER, to=[user.email])
         email.content_subtype = 'html'
         email.send()

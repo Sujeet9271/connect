@@ -20,7 +20,7 @@ from core.logger import logger
 
 def generate_unique_user_id():
     prefix = 'USR'
-    last_user = Users.objects.order_by('-id').first()
+    last_user = Users.objects.exclude(user_id__isnull=True).order_by('-id').first()
     if last_user and last_user.user_id:
         try:
             last_num = int(last_user.user_id.replace(prefix, ''))
@@ -34,7 +34,9 @@ def generate_unique_user_id():
 def pre_save_users(sender, instance:Users, *args, **kwargs):
     logger.info('pre_save_user')
     if not instance.user_id:
-        instance.user_id = generate_unique_user_id()
+        user_id = generate_unique_user_id()
+        logger.info(f'{user_id=}')
+        instance.user_id = user_id
 
 
 
